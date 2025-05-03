@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Initiation Simulator - Interactive Web Version</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .game-container {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        #game-canvas {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .instructions-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .instructions-panel h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        .instructions-panel ol {
+            padding-left: 1.5rem;
+        }
+        
+        .instructions-panel li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .about-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 950px) {
+            #game-canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Translation Initiation Simulator</h1>
+        <p>Interactive Molecular Biology Art Project</p>
+    </header>
+    
+    <div class="container">
+        <div class="instructions-panel">
+            <h2>How to Play</h2>
+            <ol>
+                <li>Click "Start Game" to begin the simulation</li>
+                <li>Drag the protein components (colored shapes) to their correct positions on the mRNA strand</li>
+                <li>The eIF1, eIF2, and eIF3 components must be attached to the 40S subunit to form the 43S complex</li>
+                <li>Place all components correctly to complete the translation initiation process</li>
+                <li>If you need to restart, refresh the page</li>
+            </ol>
+        </div>
+        
+        <div class="game-container">
+            <canvas id="game-canvas" width="900" height="650"></canvas>
+        </div>
+        
+        <div class="about-section">
+            <h2>About Translation Initiation</h2>
+            <p>Translation initiation is the process where ribosomes begin protein synthesis from messenger RNA (mRNA). In eukaryotes, this process involves several key steps:</p>
+            <ol>
+                <li>The cap-binding complex forms at the 5' end of mRNA</li>
+                <li>The 43S pre-initiation complex forms and attaches to mRNA</li>
+                <li>The complex scans along the mRNA until reaching the start codon</li>
+                <li>The 60S ribosomal subunit joins to form the complete 80S ribosome</li>
+                <li>Protein synthesis begins</li>
+            </ol>
+            <p>This interactive simulation allows you to explore and understand these complex molecular interactions in a visual, hands-on way.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Translation Initiation Simulator | Molecular Biology Art Project</p>
+        <p><small>This interactive web version is for educational purposes only.</small></p>
+    </footer>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
+        
+        // Colors
+        const WHITE = '#FFFFFF';
+        const BLACK = '#000000';
+        const COLORS = {
+            PAB: '#9C27B0',
+            eIF4E: '#F44336',
+            eIF4G: '#4CAF50',
+            eIF4A: '#2196F3',
+            '43S': '#FF9800',
+            '40S': '#E91E63',
+            eIF1: '#00BCD4',
+            eIF3: '#FF5722',
+            eIF2: '#8BC34A',
+            '60S': '#673AB7'
+        };
+        
+        // Game state
+        let gameStarted = false;
+        let gameComplete = false;
+        let currentStep = 1;
+        let dragging = false;
+        let draggedComponent = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let componentsAttached = { eIF1: false, eIF2: false, eIF3: false };
+        let transformTo43S = false;
+        
+        // Component definitions with sizes from original script
+        const components = {
+            PAB: { position: [100, 100], placed: false, size: [110, 80], visible: true },
+            eIF4E: { position: [200, 100], placed: false, size: [85, 90], visible: true },
+            eIF4G: { position: [300, 100], placed: false, size: [140, 80], visible: true },
+            eIF4A: { position: [400, 100], placed: false, size: [130, 65], visible: true },
+            '43S': { position: [500, 105], placed: true, size: [180, 145], visible: false },
+            '40S': { position: [600, 150], placed: false, size: [140, 135], visible: true },
+            eIF1: { position: [500, 20], placed: false, size: [50, 30], visible: true },
+            eIF3: { position: [400, 50], placed: false, size: [140, 70], visible: true },
+            eIF2: { position: [300, 50], placed: false, size: [70, 70], visible: true },
+            '60S': { position: [650, 30], placed: false, size: [170, 156], visible: true }
+        };
+        
+        // Match zones from original script
+        const matchZones = {
+            PAB: { center: [90, 430], radius: 100 },
+            eIF4E: { center: [110, 285], radius: 100 },
+            eIF4G: { center: [100, 365], radius: 100 },
+            eIF4A: { center: [88, 340], radius: 90 },
+            '43S': { center: [120, 230], radius: 120 },
+            '60S': { center: [220, 160], radius: 100 }
+        };
+        
+        // Create background gradient
+        function drawBackground() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+            gradient.addColorStop(0, '#e0f7fa');
+            gradient.addColorStop(1, '#b3e5fc');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        }
+        
+        // Draw mRNA representation
+        function drawMRNA() {
+            // Draw the main strand
+            ctx.fillStyle = '#aaddee';
+            ctx.beginPath();
+            ctx.moveTo(0, HEIGHT - 70);
+            ctx.bezierCurveTo(WIDTH/4, HEIGHT - 80, 3*WIDTH/4, HEIGHT - 80, WIDTH, HEIGHT - 70);
+            ctx.lineTo(WIDTH, HEIGHT);
+            ctx.lineTo(0, HEIGHT);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Add details
+            ctx.fillStyle = BLACK;
+            ctx.font = '18px Arial';
+            ctx.fillText('AAAAA', 90, HEIGHT - 30); // Poly-A tail
+            ctx.fillText('m7G', WIDTH - 110, HEIGHT - 30); // Cap
+        }
+        
+        // Draw protein components
+        function drawComponents() {
+            for (const [key, comp] of Object.entries(components)) {
+                // Skip components that shouldn't be visible
+                if (!comp.visible) continue;
+                if (key === '43S' && !transformTo43S) continue;
+                if (key === '40S' && transformTo43S) continue;
+                if (key in componentsAttached && componentsAttached[key] && transformTo43S) continue;
+                
+                // Draw the component
+                ctx.fillStyle = COLORS[key];
+                ctx.fillRect(comp.position[0], comp.position[1], comp.size[0], comp.size[1]);
+                
+                // Add text label
+                ctx.fillStyle = WHITE;
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(key, comp.position[0] + comp.size[0]/2, comp.position[1] + comp.size[1]/2);
+                
+                // Add border
+                ctx.strokeStyle = '#333333';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(comp.position[0], comp.position[1], comp.size[0], comp.size[1]);
+            }
+        }
+        
+        // Check if a component is near a target position
+        function isNear(center, radius, position) {
+            const distance = Math.sqrt(
+                Math.pow(center[0] - position[0], 2) + 
+                Math.pow(center[1] - position[1], 2)
+            );
+            return distance <= radius;
+        }
+        
+        // Transform components to 43S when conditions are met
+        function checkAndTransformTo43S() {
+            if (Object.values(componentsAttached).every(value => value) && !transformTo43S) {
+                // Set 43S position and visibility
+                components['43S'].position = [...components['40S'].position];
+                components['43S'].placed = false;
+                components['43S'].visible = true;
+                
+                // Hide 40S and attached components
+                components['40S'].placed = true;
+                components['40S'].visible = false;
+                
+                for (const key of Object.keys(componentsAttached)) {
+                    components[key].placed = true;
+                    components[key].visible = false;
+                }
+                
+                transformTo43S = true;
+            }
+        }
+        
+        // Draw instructions and UI elements
+        function drawUI() {
+            ctx.fillStyle = BLACK;
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('Prepare the cell for translation :)', 20, 10);
+            
+            if (gameComplete) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.font = '36px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Good Job!', WIDTH/2, HEIGHT/2 - 50);
+            }
+            
+            if (!gameStarted) {
+                // Draw menu background
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                
+                // Draw title
+                ctx.fillStyle = BLACK;
+                ctx.font = '60px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Build mRNA', WIDTH/2, 200);
+                
+                // Draw start button
+                ctx.fillStyle = '#4285f4';
+                ctx.fillRect(WIDTH/2 - 100, 400, 200, 50);
+                ctx.fillStyle = WHITE;
+                ctx.font = '30px Arial';
+                ctx.fillText('Start Game', WIDTH/2, 425);
+                
+                // Draw exit button
+                ctx.fillStyle = '#e53935';
+                ctx.fillRect(WIDTH/2 - 100, 500, 200, 50);
+                ctx.fillStyle = WHITE;
+                ctx.fillText('Exit', WIDTH/2, 525);
+            }
+        }
+        
+        // Optional: Draw match zones for debugging
+        function drawMatchZones(visible = false) {
+            if (!visible) return;
+            
+            ctx.globalAlpha = 0.2;
+            for (const [key, zone] of Object.entries(matchZones)) {
+                ctx.strokeStyle = COLORS[key];
+                ctx.beginPath();
+                ctx.arc(zone.center[0], zone.center[1], zone.radius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1.0;
+        }
+        
+        // Main render function
+        function render() {
+            // Clear canvas
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            
+            // Draw elements
+            drawBackground();
+            drawMRNA();
+            drawComponents();
+            drawMatchZones(false); // Set to true to see match zones
+            drawUI();
+            
+            // Continue animation loop
+            requestAnimationFrame(render);
+        }
+        
+        // Mouse event handlers
+        function handleMouseDown(e) {
+            if (!gameStarted) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                // Check if start button clicked
+                if (mouseX >= WIDTH/2 - 100 && mouseX <= WIDTH/2 + 100 && 
+                    mouseY >= 400 && mouseY <= 450) {
+                    gameStarted = true;
+                    return;
+                }
+                
+                // Check if exit button clicked
+                if (mouseX >= WIDTH/2 - 100 && mouseX <= WIDTH/2 + 100 && 
+                    mouseY >= 500 && mouseY <= 550) {
+                    window.close(); // This may not work in most browsers for security reasons
+                    return;
+                }
+                
+                return;
+            }
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            for (const [key, comp] of Object.entries(components)) {
+                if (!comp.visible || comp.placed) continue;
+                
+                if (mouseX >= comp.position[0] && 
+                    mouseX <= comp.position[0] + comp.size[0] && 
+                    mouseY >= comp.position[1] && 
+                    mouseY <= comp.position[1] + comp.size[1]) {
+                    dragging = true;
+                    draggedComponent = key;
+                    dragOffsetX = mouseX - comp.position[0];
+                    dragOffsetY = mouseY - comp.position[1];
+                    break;
+                }
+            }
+        }
+        
+        function handleMouseMove(e) {
+            if (!gameStarted || !dragging || !draggedComponent) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            // Update component position
+            components[draggedComponent].position[0] = mouseX - dragOffsetX;
+            components[draggedComponent].position[1] = mouseY - dragOffsetY;
+        }
+        
+        function handleMouseUp() {
+            if (!gameStarted || !dragging || !draggedComponent) {
+                dragging = false;
+                draggedComponent = null;
+                return;
+            }
+            
+            const position = components[draggedComponent].position;
+            
+            // Check for attachment to 40S
+            if (draggedComponent in componentsAttached && !componentsAttached[draggedComponent]) {
+                const fortyPos = components['40S'].position;
+                
+                if (isNear([fortyPos[0] + components['40S'].size[0]/2, 
+                           fortyPos[1] + components['40S'].size[1]/2], 75, 
+                           [position[0] + components[draggedComponent].size[0]/2, 
+                            position[1] + components[draggedComponent].size[1]/2])) {
+                    
+                    // Get the index of the component
+                    const index = Object.keys(componentsAttached).indexOf(draggedComponent);
+                    
+                    // Calculate a position relative to 40S
+                    const newX = fortyPos[0] + 20 * (index + 1);
+                    const newY = fortyPos[1] - 50;
+                    
+                    // Update component position
+                    components[draggedComponent].position = [newX, newY];
+                    
+                    // Mark as attached
+                    componentsAttached[draggedComponent] = true;
+                    
+                    // Check for transformation
+                    checkAndTransformTo43S();
+                    
+                    dragging = false;
+                    draggedComponent = null;
+                    return;
+                }
+            }
+            
+            // Check for match zones
+            if (matchZones[draggedComponent]) {
+                const zone = matchZones[draggedComponent];
+                
+                if (isNear(zone.center, zone.radius, 
+                          [position[0] + components[draggedComponent].size[0]/2, 
+                           position[1] + components[draggedComponent].size[1]/2])) {
+                    
+                    // Snap to the center of the zone
+                    const newX = zone.center[0] - components[draggedComponent].size[0]/2;
+                    const newY = zone.center[1] - components[draggedComponent].size[1]/2;
+                    
+                    // Update component position and state
+                    components[draggedComponent].position = [newX, newY];
+                    components[draggedComponent].placed = true;
+                    
+                    // Update step counter
+                    currentStep++;
+                    
+                    // Check for game completion
+                    if (currentStep > Object.keys(matchZones).length) {
+                        gameComplete = true;
+                    }
+                }
+            }
+            
+            dragging = false;
+            draggedComponent = null;
+        }
+        
+        // Touch events for mobile support
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            handleMouseDown(mouseEvent);
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            handleMouseMove(mouseEvent);
+        }
+        
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            handleMouseUp();
+        }
+        
+        // Initialize the game
+        function init() {
+            // Add event listeners
+            canvas.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            
+            // Touch support
+            canvas.addEventListener('touchstart', handleTouchStart);
+            document.addEventListener('touchmove', handleTouchMove);
+            document.addEventListener('touchend', handleTouchEnd);
+            
+            // Start the render loop
+            render();
+        }
+        
+        // Start the game
+        init();
+    </script>
+</body>
+</html>
