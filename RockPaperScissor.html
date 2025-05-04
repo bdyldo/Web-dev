@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<head>
+    <title>
+        Easy Subscribe Button
+    </title>
+    <style>
+        
+    </style>
+
+</head>
+
+<body>
+    <p>
+        Youtube Subscribe Button
+    </p>
+    <button class = "hi">
+        Subscribe
+    </button>
+    <script>
+       const butt = document.getElementsByClassName("hi")[0]
+       function clicked(){
+        if(butt.textContent === "Subscribe"){
+            butt.textContent = "Unsubscribe"
+        }
+        else{
+            butt.textContent = "Subscribe"
+        }
+       }
+       butt.addEventListener("click",clicked)
+    </script>
+</body>
