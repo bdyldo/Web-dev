@@ -1,0 +1,24 @@
+.title{
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Arial;
+    margin-bottom: 5px;
+}
+
+#scoreboard{
+    font-family: Arial;
+    font-weight: bold; 
+}
+
+#moves{
+    font-weight: bold;
+    font-size: 20px;
+    white-space: pre;
+}
+body{
+    background-color: aqua;  
+}
+img{
+    width: 100px;
+    height: 100px;
+}
