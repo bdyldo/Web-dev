@@ -5,7 +5,30 @@
         Easy Subscribe Button
     </title>
     <style>
+        .not-subscribed {
+            background-color: black;
+            color: white;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-weight: bold;
+            border-radius: 50px;
+            /* To change the mouse shape to a hand pointer when hovering over */
+            cursor: pointer;
+        }
+        .subscribed {
+            background-color: gray;
+            color: black;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-weight: bold;
+            border-radius: 50px;
+            /* To change the mouse shape to a hand pointer when hovering over */
+            cursor: pointer;
+        }
         
+        body {
+            font-family: Arial;
+        }
     </style>
 
 </head>
@@ -14,18 +37,21 @@
     <p>
         Youtube Subscribe Button
     </p>
-    <button class = "hi">
+    <button class = "subscribe-button not-subscribed">
         Subscribe
     </button>
     <script>
-       const butt = document.getElementsByClassName("hi")[0]
+       const butt = document.getElementsByClassName("subscribe-button")[0]
        function clicked(){
-        if(butt.textContent === "Subscribe"){
-            butt.textContent = "Unsubscribe"
-        }
-        else{
-            butt.textContent = "Subscribe"
-        }
+            if(butt.textContent.trim() === "Subscribe"){
+                butt.textContent = "Unsubscribe"
+            }
+            else{
+                butt.textContent = "Subscribe"
+            }
+            butt.classList.toggle("subscribed");
+            butt.classList.toggle("not-subscribed");
+            console.log(butt.className)
        }
        butt.addEventListener("click",clicked)
     </script>
