@@ -1,5 +1,10 @@
+// Module linkage, only works with live-server
+import {cart, addToCart} from '../data/cart.js';
+import {products} from '../data/products.js';
+
 let productsHTML = '';
 
+// Generate HTML for all products by looping through product in products
 products.forEach((product) => {
   const html = `
     <div class="product-container">
@@ -59,27 +64,21 @@ products.forEach((product) => {
 // Copy everything from productsHTML variable and display it on screen
 document.querySelector(".products-grid").innerHTML = productsHTML;
 
-// If button clicked: add 1 quantity to the cart if already in cart, else create new element in cart
+// Linear check for total item number to display on cart icon after every add to cart call
+function updateCart(){
+    let cartQuantity = 0;
+    
+    cart.forEach((cartItem) =>{
+        cartQuantity += cartItem.quantity;
+    });
+
+    document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+}
+
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
     button.addEventListener("click", () => {
         const productId = button.dataset.productId;
-        const exist = cart.find(p => p.productId === productId)
-        if(exist){
-            exist.quantity += 1;
-        }
-        else{
-            cart.push({
-                productId,
-                quantity: 1
-            });
-        }
-
-        let cartQuantity = 0;
-        // Linear loop to check total item number
-        cart.forEach((item) =>{
-            cartQuantity += item.quantity;
-        });
-
-        document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+        addToCart(productId);
+        updateCart();
     });
 });
