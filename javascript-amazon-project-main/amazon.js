@@ -45,8 +45,8 @@ products.forEach((product) => {
             <img src="images/icons/checkmark.png">
             Added
         </div>
-
-        <button class="add-to-cart-button button-primary">
+    
+        <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id = "${product.id}">
             Add to Cart
         </button>
     </div>
@@ -56,5 +56,30 @@ products.forEach((product) => {
 
 });
 
+// Copy everything from productsHTML variable and display it on screen
 document.querySelector(".products-grid").innerHTML = productsHTML;
 
+// If button clicked: add 1 quantity to the cart if already in cart, else create new element in cart
+document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+    button.addEventListener("click", () => {
+        const productId = button.dataset.productId;
+        const exist = cart.find(p => p.productId === productId)
+        if(exist){
+            exist.quantity += 1;
+        }
+        else{
+            cart.push({
+                productId,
+                quantity: 1
+            });
+        }
+
+        let cartQuantity = 0;
+        // Linear loop to check total item number
+        cart.forEach((item) =>{
+            cartQuantity += item.quantity;
+        });
+
+        document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+    });
+});
