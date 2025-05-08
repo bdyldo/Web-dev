@@ -15,7 +15,7 @@ A simple button that toggles between "Subscribe" and "Unsubscribe" using DOM met
 ### 🛒 Amazon Lookalike
 A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and JavaScript DOM scripting.
 
-# Functionalities
+#### Functionalities
 - Amazon lookalike webpage which contains multiple lines of listed products
 - Add product button to add given items to a checkout cart
 - Checkout page which includes a dynamic total cost calculation summary and all added products
