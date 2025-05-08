@@ -6,10 +6,10 @@ This repository documents my journey through learning web development. It includ
 
 ## 📁 Projects Included
 
-### 🎮 Rock-Paper-Scissors Game
+## 🎮 Rock-Paper-Scissors Game
 A browser-based simulation where you can play Rock-Paper-Scissors against the computer, with a scoreboard and random logic.
 
-### 🤏 Smaller Projects
+## 🤏 Smaller Projects
 
 #### 😺 CatPhoto App
 Simple website that allows you to check habits about a cat and submit your own cat photos
@@ -23,7 +23,7 @@ A simple button that toggles between "Subscribe" and "Unsubscribe" using DOM met
 #### 🧾 To-do List
 A small todo list site that allows you to add and delete tasks
 
-### 🛒 Build Amazon
+## 🛒 Build Amazon
 A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and JavaScript DOM scripting.
 
 #### Functionalities
