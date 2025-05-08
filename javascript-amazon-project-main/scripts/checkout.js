@@ -98,7 +98,10 @@ document.querySelector(".order-summary").innerHTML = cartSummaryHTML;
 
 document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
+        // on each click, obtain the html's elements productID using the data attributes inside html
         const productId = link.dataset.productId;
+
+        // Remove this element from cart array
         removeFromCart(productId);
 
         //.remove is a DOM method that removes this element in html
