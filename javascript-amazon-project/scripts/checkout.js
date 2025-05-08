@@ -108,6 +108,8 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
 
         //.remove is a DOM method that removes this element in html
         document.querySelector(`.cart-item-container-${productId}`).remove();
+
+        paymentSummary();
     });
 })
 
