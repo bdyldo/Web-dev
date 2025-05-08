@@ -1,4 +1,4 @@
-//Initialize two default elements inside the cart
+//Initialize two default elements inside the cart. JSON.parse is used to convert the stored string in JSON stringify to an actual array (process of deserialize)
 export const cart = JSON.parse(localStorage.getItem('cart')) ||
 [{
     productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
