@@ -1,5 +1,6 @@
 import {cart,removeFromCart} from "../data/cart.js";
 import {products} from "../data/products.js";
+import { paymentSummary } from "./paymentSummary.js";
 import {formatCurrency} from "./utils/money.js";
 
 let cartSummaryHTML = '';
@@ -96,6 +97,7 @@ cart.forEach((cartItem)=>{
 
 document.querySelector(".order-summary").innerHTML = cartSummaryHTML;
 
+
 document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
         // on each click, obtain the html's elements productID using the data attributes inside html
@@ -108,3 +110,5 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
         document.querySelector(`.cart-item-container-${productId}`).remove();
     });
 })
+
+paymentSummary();
