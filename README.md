@@ -15,6 +15,8 @@ A simple button that toggles between "Subscribe" and "Unsubscribe" using DOM met
 ### 🛒 Amazon Lookalike
 A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and JavaScript DOM scripting.
 
+#Functionalities
+
 ---
 
 ## 🛠 Tech Stack
