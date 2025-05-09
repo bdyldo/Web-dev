@@ -38,14 +38,39 @@ class Clothing extends Product {
   }
   // method overriding 
   extraInfoHTML(){
-    // Target = '_blank' opens the link into a new tab
+    // target = '_blank' opens the hyperlink element into a new tab
     return `<a href = "${this.sizeChartLink}" target = "_blank">
         Size chart
       </a>`;
   }
 }
 
+export let products = [];
+
+//Use backend to load all products
+export function loadProducts(fun){
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    //A JSON is returned from backend, want to parse it to turn into an array of js object.
+    products = JSON.parse(xhr.response).map((productDetails)=>{
+      if(productDetails.type === 'clothing'){
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);;
+    })
+
+    // We run the http code generation function for products from amazon.js only after we finished receiving and retrieving the data from the backend
+    // This is also the idea of a callback (inputting a function but calling it later (not instantly))
+    fun();
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
 // Input all objects inside into the product and run this initialization using the Constructor
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -710,4 +735,4 @@ export const products = [
     return new Clothing(productDetails);
   }
   return new Product(productDetails);
-});
+});*/

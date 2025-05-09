@@ -4,7 +4,7 @@ const xhr = new XMLHttpRequest();
 // We wait for load event, which stands for when the response4 has loaded
 xhr.addEventListener('load',() =>{
     // saving the response
-    xhr.response
+    JSON.parse(xhr.response);
 });
 
 // Set up a HTTP request by open(method, destination)
