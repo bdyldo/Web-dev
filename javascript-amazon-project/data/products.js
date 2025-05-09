@@ -3,7 +3,38 @@ export function getProduct(productId){
     return p;
 }
 
+class Product{
+  id;
+  image;
+  name;
+  rating;
+  priceCents;
 
+  constructor(productDetails){
+    this.id = productDetails.id;
+    this.image = productDetails.image;
+    this.name = productDetails.name;
+    this.rating = productDetails.rating;
+    this.priceCents = productDetails.priceCents;
+  }
+
+  getStarsUrl(){
+    return `images/ratings/rating-${this.rating.stars * 10}.png`
+  }
+}
+
+// This demonstrates the idea of inheritence, which allows for reusage of all methods and properties inside the extended class
+class Clothing extends Product {
+  sizeChartLink;
+
+  constructor(productDetails){
+    // Super() calls the parents classes inheritence function
+    super(productDetails);
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+}
+
+// Input all objects inside into the product and run this initialization using the Constructor
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -663,4 +694,9 @@ export const products = [
       "mens"
     ]
   }
-];
+].map((productDetails)=>{
+  if(productDetails.type === 'clothing'){
+    return new Clothing(productDetails);
+  }
+  return new Product(productDetails);
+});

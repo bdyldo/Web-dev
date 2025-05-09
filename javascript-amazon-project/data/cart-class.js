@@ -1,17 +1,18 @@
-//A class is an object generator
+// A class is an object generator
 class Cart{
     cartItems;
-    localStorageKey;
+
+    // # makes a property / method private (only accessed inside the class and cannot be altered outside)
+    #localStorageKey;
 
     // Code that runs automatically when the class is generated
     constructor(localStorageKey){
         this.localStorageKey = localStorageKey;
-
         this.loadFromStorage();
     }
 
     loadFromStorage(){
-        this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) ||
+        this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) ||
         [{
             productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
             quantity: 2
@@ -23,7 +24,7 @@ class Cart{
 
     savetoStorage(){
         // store cart as a string as key value 'cart'
-        localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+        localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
     }
 
     addToCart(productId){
