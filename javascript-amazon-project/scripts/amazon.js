@@ -45,6 +45,9 @@ products.forEach((product) => {
             </select>
         </div>
 
+        <!--Polymorphism (the ability of using a method on some object w/o having to know the specific class an onject belongs to. i.e. no if statement for checks-->
+        ${product.extraInfoHTML()}
+
         <div class="product-spacer"></div>
 
         <div class="added-to-cart">

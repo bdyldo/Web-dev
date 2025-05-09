@@ -19,7 +19,11 @@ class Product{
   }
 
   getStarsUrl(){
-    return `images/ratings/rating-${this.rating.stars * 10}.png`
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
+  }
+
+  extraInfoHTML(){
+    return '';
   }
 }
 
@@ -31,6 +35,13 @@ class Clothing extends Product {
     // Super() calls the parents classes inheritence function
     super(productDetails);
     this.sizeChartLink = productDetails.sizeChartLink;
+  }
+  // method overriding 
+  extraInfoHTML(){
+    // Target = '_blank' opens the link into a new tab
+    return `<a href = "${this.sizeChartLink}" target = "_blank">
+        Size chart
+      </a>`;
   }
 }
 
