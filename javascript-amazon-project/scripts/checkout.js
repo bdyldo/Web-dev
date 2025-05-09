@@ -2,7 +2,7 @@ import {cart,removeFromCart} from "../data/cart.js";
 import {products} from "../data/products.js";
 import { paymentSummary } from "./paymentSummary.js";
 import {formatCurrency} from "./utils/money.js";
-//import '../data/cart-oop.js';
+import '../data/backend-practice.js';
 
 let cartSummaryHTML = '';
 
