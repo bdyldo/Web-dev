@@ -6,7 +6,7 @@ This repository documents my journey through learning web development. It includ
 
 ## 📁 Projects Included
 
-## [🎮 Rock-Paper-Scissors Game](./RockPaperScissorSim-Project)
+## [🎮 Rock-Paper-Scissors Game](./rockpaperscissorProject)
 A browser-based simulation where you can play Rock-Paper-Scissors against the computer, with a scoreboard and random logic.
 
 ## 🛒 Build Amazon
