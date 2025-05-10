@@ -90,5 +90,4 @@ function renderProductsGrid(){
             updateCart();
         });
     });
-
 }
