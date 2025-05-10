@@ -9,7 +9,7 @@ This repository documents my journey through learning web development. It includ
 ## [🎮 Rock-Paper-Scissors Game](./rockpaperscissorProject)
 A browser-based simulation where you can play Rock-Paper-Scissors against the computer, with a scoreboard and random logic.
 
-## 🛒 Build Amazon
+## [🛒 Build Amazon](./javascriptAmazonProject)
 A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and JavaScript DOM scripting.
 
 #### ⚙️ Functionalities 
@@ -20,7 +20,7 @@ A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and
 - Having a product tracking page showing the progress of a given order
 - A order page which sends order to backend server
 
-## 🤏 Other smaller Projects
+## [🤏 Other smaller Projects](./smallerProjects)
 
 #### 😺 CatPhoto App
 Simple website that allows you to check habits about a cat and submit your own cat photos
