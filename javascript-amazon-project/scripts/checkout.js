@@ -15,9 +15,18 @@ import {formatCurrency} from "./utils/money.js";
 }).then(f)*/
 
 // Promise.all includes all promises inside the array as execution prereq for.then to execute
-Promise.all([
+/*Promise.all([
     loadProductsFetch()
-]).then(f)
+]).then(f)*/
+
+//Async Await: better way to represent promises waiting features by wrapping the code inside the function to a larger promise
+async function loadPage(){
+    // await only works in promises under async function, it waits for this promise to finish before going into the next step inside the function code
+    await loadProductsFetch();
+    f();
+}
+
+loadPage();
 
 function f(){
     let cartSummaryHTML = '';
