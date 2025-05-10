@@ -60,7 +60,6 @@ export function loadProductsFetch(){
       const parsedObject = JSON.parse(responseText);
       resolve(parsedObject);
     });*/
-
     return response.json();
   }).then((productsData)=>{
     products = productsData.map((productDetails)=>{
@@ -69,10 +68,9 @@ export function loadProductsFetch(){
       }
       return new Product(productDetails);;
     })
-
-    //returning another promise, allowing for further attachment
-    return promise;
   })
+  //returning another promise, allowing for further attachment
+  return promise;
 }
 
 //Use backend to load all products
