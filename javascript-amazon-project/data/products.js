@@ -47,6 +47,34 @@ class Clothing extends Product {
 
 export let products = [];
 
+// fetch() creates a promise, does the same thing as a 'GET' request using .open()
+// When response is gotten using fetch() call, a resolve(response msg) function is called, meaning we now can use .then() w/o even calling resolve() externally, and the server response is given already, hence we can now use .then(response) (response can be any other variables name)
+export function loadProductsFetch(){
+  const promise = fetch('https://supersimplebackend.dev/products'
+  ).then((response)=>{
+    // Response is what we got using fetch
+    //.json() also returns a promise representation of the returned response string
+    // What it does internally:
+    /*const jsonPromise = new Promise((resolve) => {
+      // read and parse body
+      const parsedObject = JSON.parse(responseText);
+      resolve(parsedObject);
+    });*/
+
+    return response.json();
+  }).then((productsData)=>{
+    products = productsData.map((productDetails)=>{
+      if(productDetails.type === 'clothing'){
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);;
+    })
+
+    //returning another promise, allowing for further attachment
+    return promise;
+  })
+}
+
 //Use backend to load all products
 export function loadProducts(fun){
   const xhr = new XMLHttpRequest();

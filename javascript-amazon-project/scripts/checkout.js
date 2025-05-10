@@ -1,18 +1,23 @@
 import {cart,removeFromCart} from "../data/cart.js";
-import {getProduct, loadProducts, products} from "../data/products.js";
+import {getProduct, loadProducts, loadProductsFetch, products} from "../data/products.js";
 import { paymentSummary } from "./paymentSummary.js";
 import {formatCurrency} from "./utils/money.js";
 
 // Create a promise class, which runs the inner parameter function immediately 
 // resolve() is a builtin input that allows for a "wait()" similarity function in C
 // Calling resolve() will now gets us to the .then() section of the Promise class
-new Promise((resolve)=>{
+/*new Promise((resolve)=>{
     loadProducts(()=>{
         // The load product input parameter function only runs after product finished loading
         // giving result a parameter allows for later usage in .then by a 'value' input parameter
         resolve();
     });
-}).then(f)
+}).then(f)*/
+
+// Promise.all includes all promises inside the array as execution prereq for.then to execute
+Promise.all([
+    loadProductsFetch()
+]).then(f)
 
 function f(){
     let cartSummaryHTML = '';
