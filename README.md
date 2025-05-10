@@ -16,7 +16,9 @@ A minimal Amazon-style webpage built to practice HTML structure, CSS layout, and
 - Amazon lookalike webpage which contains multiple lines of listed products
 - Add product button to add given items to a checkout cart
 - Checkout page which includes a dynamic total cost calculation summary and all added products
-- Removal of products in chekout page using 'Delete' button
+- Removal of products in chekout page using 'Delete' button with cart and pricing dynamically updated
+- Having a product tracking page showing the progress of a given order
+- A order page which sends order to backend server
 
 ## 🤏 Other smaller Projects
 
