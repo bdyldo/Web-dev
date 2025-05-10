@@ -88,5 +88,10 @@
         </div>
       </div>
     </div>
+    <script>
+      // Allows me to obtain url parameters from current location hence dynamically generate the item to be tracked
+      const url =  new URL(window.location.href);
+      url.searchParams.get('orderID');
+    </script>
   </body>
 </html>
