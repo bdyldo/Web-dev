@@ -21,9 +21,15 @@ import {formatCurrency} from "./utils/money.js";
 
 //Async Await: better way to represent promises waiting features by wrapping the code inside the function to a larger promise
 async function loadPage(){
-    // await only works in promises under async function, it waits for this promise to finish before going into the next step inside the function code
-    await loadProductsFetch();
-    f();
+    //try catch allows catching errors in async function and normal function, used to handle unexpected error
+    try{
+        // await only works in promises under async function, it waits for this promise to finish before going into the next step inside the function code
+        await loadProductsFetch();
+        f();
+    } catch(error){
+        console.log('Error');
+    }
+    
 }
 
 loadPage();

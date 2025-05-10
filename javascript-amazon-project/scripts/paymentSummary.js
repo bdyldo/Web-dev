@@ -1,4 +1,5 @@
 import {cart} from "../data/cart.js";
+import { addOrders } from "../data/orders.js";
 import {getProduct} from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
@@ -42,9 +43,32 @@ export function paymentSummary(){
         <div class="payment-summary-money">$${formatCurrency(totWithTax)}</div>
     </div>
 
-    <button class="place-order-button button-primary">
+    <button class="place-order-button button-primary js-place-order">
         Place your order
     </button>
     `
     document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHTML;
+
+    document.querySelector(".js-place-order").addEventListener('click', async ()=>{
+        try{
+            // Sending a POST request to the backend, hence want a second parameter
+            const response = await fetch('https://supersimplebackend.dev/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cart:cart
+                })
+            });
+
+            const order = await response.json();
+            addOrders(order);
+        } catch(error){
+            console.log('error');
+        }
+        
+        // Open to a new tab after clicking on order button
+        window.location.href = './orders.html';
+    })
 }

@@ -66,8 +66,11 @@ export function loadProductsFetch(){
       if(productDetails.type === 'clothing'){
         return new Clothing(productDetails);
       }
-      return new Product(productDetails);;
+      return new Product(productDetails);
     })
+    //.catch only called when error exists
+  }).catch((error)=>{
+    console.log('Error');
   })
   //returning another promise, allowing for further attachment
   return promise;
@@ -90,6 +93,11 @@ export function loadProducts(fun){
     // This is also the idea of a callback (inputting a function but calling it later (not instantly))
     fun();
   });
+
+  // error handling event listener
+  xhr.addEventListener('error', (error)=>{
+    console.log('Error');
+  })
 
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
